@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "anti-slop"
+version = "0.2.0"
+description = "Anti-Slop Regulator Platform — detect synthetic public comments"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[tool.setuptools.packages.find]
+include = ["anti_slop*", "core*", "gui*"]
+
+[project.scripts]
+anti-slop = "run_gui:main"

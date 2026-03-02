@@ -1,0 +1,31 @@
+name: heuristic_baseline
+version: 0.1.0
+kind: classifier
+author: anti_slop_team
+description: >
+  No-API heuristic classifier using lexical and structural features.
+  Detects likely AI-generated comments via repetition, punctuation patterns,
+  sentence length variance, and known template markers.
+  Good for quick baseline scoring without requiring API keys.
+entrypoint: plugin.py:Plugin
+inputs:
+  required:
+    - comment_text
+  optional: []
+outputs:
+  per_comment:
+    - pred_label
+    - score_ai
+    - confidence
+    - explanation_json
+parameters:
+  threshold:
+    type: float
+    default: 0.5
+    min: 0.0
+    max: 1.0
+    description: Score threshold above which a comment is predicted AI-generated
+  min_length:
+    type: int
+    default: 50
+    description: Comments shorter than this are classified as uncertain

@@ -1,0 +1,38 @@
+name: simple_classifier
+version: 0.1.0
+kind: classifier
+author: anti_slop_team
+description: >
+  Combines heuristic features with optional enrichment outputs
+  (theme, stance) to classify comments as human/ai_generated/uncertain.
+  Can optionally use OpenAI for LLM-based classification.
+entrypoint: plugin.py:Plugin
+inputs:
+  required:
+    - comment_text
+  optional:
+    - enrichments.theme_stance_enricher
+parameters:
+  provider:
+    type: enum
+    values: [heuristic, openai]
+    default: heuristic
+    description: "heuristic = weighted features; openai = LLM zero-shot"
+  model:
+    type: string
+    default: gpt-4.1-mini
+  threshold:
+    type: float
+    default: 0.5
+    min: 0.0
+    max: 1.0
+  use_enrichments:
+    type: bool
+    default: true
+    description: If true and enrichments are available, incorporates theme/stance signals
+outputs:
+  per_comment:
+    - pred_label
+    - score_ai
+    - confidence
+    - explanation_json

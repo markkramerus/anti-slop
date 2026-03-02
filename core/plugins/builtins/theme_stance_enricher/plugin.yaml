@@ -1,0 +1,35 @@
+name: theme_stance_enricher
+version: 0.1.0
+kind: enrichment
+author: anti_slop_team
+description: >
+  Extracts themes and pro/con/neutral stance for each comment using
+  keyword matching (local, no API) or an LLM API (OpenAI).
+  Local mode uses a topic keyword taxonomy for the CMS/healthcare domain.
+entrypoint: plugin.py:Plugin
+inputs:
+  required:
+    - comment_text
+  optional:
+    - metadata
+outputs:
+  per_comment:
+    - theme_primary
+    - theme_labels
+    - stance
+    - stance_confidence
+    - explanation_json
+parameters:
+  provider:
+    type: enum
+    values: [local, openai]
+    default: local
+    description: "local = keyword matching; openai = LLM-based"
+  model:
+    type: string
+    default: gpt-4.1-mini
+    description: OpenAI model (only used when provider=openai)
+  batch_size:
+    type: int
+    default: 50
+    description: Batch size for OpenAI API calls
