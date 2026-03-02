@@ -1,0 +1,11 @@
+{
+  "run_id": "441639eb-14b2-4b16-bbb8-c48fa37712b8",
+  "embedding_run_id": "ab4121db-537e-49c9-8865-f6ad0c375bdb",
+  "method": "pca",
+  "dims": 2,
+  "params": {
+    "random_state": 42
+  },
+  "row_count": 1081,
+  "created_at": "2026-03-02 21:25:27.832751"
+}

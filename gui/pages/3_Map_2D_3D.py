@@ -17,7 +17,6 @@ if str(_REPO_ROOT) not in sys.path:
 
 import pandas as pd
 import streamlit as st
-from streamlit_plotly_events import plotly_events  # type: ignore[import]
 
 import config
 from core.features.embeddings import generate_embeddings, load_embedding_vectors
@@ -346,35 +345,27 @@ if "manual_label" in plot_df.columns:
     col_c.metric("Labeled", f"{labeled:,} / {len(plot_df):,}")
 
 # Render the chart
-try:
-    is_3d = plot_dims == "3D" and "z" in coords_df.columns
-    if is_3d:
-        fig = scatter_3d(plot_df, color_by=color_by)
-        selected_points = plotly_events(fig, click_event=True, hover_event=False, key="map_3d_events")
-    else:
-        if plot_dims == "3D" and "z" not in coords_df.columns:
-            st.warning("This projection was run in 2D. Switch to 2D display or regenerate in 3D.")
-        fig = scatter_2d(plot_df, color_by=color_by)
-        selected_points = plotly_events(fig, click_event=True, hover_event=False, key="map_2d_events")
-except ImportError:
-    st.warning(
-        "⚠️ `streamlit-plotly-events` not installed — click-to-review disabled. "
-        "Install with: `pip install streamlit-plotly-events`"
-    )
-    if plot_dims == "3D" and "z" in coords_df.columns:
-        fig = scatter_3d(plot_df, color_by=color_by)
-    else:
-        fig = scatter_2d(plot_df, color_by=color_by)
-    st.plotly_chart(fig, use_container_width=True)
-    selected_points = []
+is_3d = plot_dims == "3D" and "z" in coords_df.columns
+if plot_dims == "3D" and "z" not in coords_df.columns:
+    st.warning("This projection was run in 2D. Switch to 2D display or regenerate in 3D.")
+
+if is_3d:
+    fig = scatter_3d(plot_df, color_by=color_by)
+    chart_event = st.plotly_chart(fig, key="map_3d_chart", on_select="rerun", width="stretch")
+else:
+    fig = scatter_2d(plot_df, color_by=color_by)
+    chart_event = st.plotly_chart(fig, key="map_2d_chart", on_select="rerun", width="stretch")
+
+# Extract selected points from the native Streamlit selection event
+_raw_points = (chart_event.selection or {}).get("points", []) if chart_event else []
 
 # ── Point-click → open comment ────────────────────────────────────────────────
 
-if selected_points:
+if _raw_points:
     try:
-        point = selected_points[0]
-        # plotly_events returns {x, y, curveNumber, pointNumber, pointIndex}
-        point_idx = point.get("pointIndex", point.get("pointNumber", 0))
+        point = _raw_points[0]
+        # Native st.plotly_chart selection: each point has 'point_index'
+        point_idx = point.get("point_index", point.get("pointIndex", point.get("pointNumber", 0)))
         clicked_id = plot_df.iloc[point_idx]["comment_id"]
 
         st.info(f"**Selected comment:** `{clicked_id}`")

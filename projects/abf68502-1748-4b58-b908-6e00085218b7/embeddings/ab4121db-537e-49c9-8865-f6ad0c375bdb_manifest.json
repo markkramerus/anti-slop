@@ -1,0 +1,14 @@
+{
+  "run_id": "ab4121db-537e-49c9-8865-f6ad0c375bdb",
+  "provider": "openai",
+  "model_name": "text-embedding-3-small",
+  "batch_size": 100,
+  "row_count": 1081,
+  "embedding_dim": 1536,
+  "created_at": "2026-03-02 21:23:41.919223",
+  "params": {
+    "provider": "openai",
+    "model": "text-embedding-3-small",
+    "batch_size": 100
+  }
+}

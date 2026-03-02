@@ -167,7 +167,7 @@ if st.button("🔢 Compute Metrics", type="primary"):
         colorscale="Blues",
     ))
     fig_cm.update_layout(height=300, margin=dict(l=20, r=20, t=30, b=20))
-    st.plotly_chart(fig_cm, use_container_width=True)
+    st.plotly_chart(fig_cm, width="stretch")
 
     # ── ROC + PR Curves ───────────────────────────────────────────────────────
     if "score_ai" in eval_df.columns:
@@ -179,14 +179,14 @@ if st.button("🔢 Compute Metrics", type="primary"):
             fig_roc.add_trace(go.Scatter(x=fpr, y=tpr, mode="lines", name="ROC"))
             fig_roc.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode="lines", line=dict(dash="dash"), name="Random"))
             fig_roc.update_layout(title="ROC Curve", xaxis_title="FPR", yaxis_title="TPR", height=350)
-            col_roc.plotly_chart(fig_roc, use_container_width=True)
+            col_roc.plotly_chart(fig_roc, width="stretch")
 
         pre, rec, _ = compute_pr_curve(eval_df)
         if pre:
             fig_pr = go.Figure()
             fig_pr.add_trace(go.Scatter(x=rec, y=pre, mode="lines", name="PR"))
             fig_pr.update_layout(title="Precision-Recall Curve", xaxis_title="Recall", yaxis_title="Precision", height=350)
-            col_pr.plotly_chart(fig_pr, use_container_width=True)
+            col_pr.plotly_chart(fig_pr, width="stretch")
 
     # ── Stratified Metrics ────────────────────────────────────────────────────
     st.subheader("Stratified Metrics")

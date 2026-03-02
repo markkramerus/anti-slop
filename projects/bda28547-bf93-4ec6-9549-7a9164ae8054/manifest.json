@@ -1,0 +1,63 @@
+{
+  "project_id": "bda28547-bf93-4ec6-9549-7a9164ae8054",
+  "project_name": "combined",
+  "created_at": "2026-03-02T20:47:51.268198",
+  "updated_at": "2026-03-02T20:54:06.640591",
+  "source_filename": "combined.csv",
+  "dataset_fingerprint": "f6ea49db984f10230dd966aa1b5ff5ffa6b20f1b4a0ccdcc93c5c07bc7fc51c5",
+  "ingest_summary": {
+    "total_rows": 1083,
+    "rows_with_comment": 1081,
+    "rows_missing_comment": 2,
+    "duplicate_comment_ids": 0,
+    "duplicate_text_hashes": 19,
+    "length_distribution": {
+      "min": 0,
+      "max": 2089542,
+      "mean": 24074.152354570637,
+      "median": 9897.0,
+      "p25": 2419.0,
+      "p75": 26724.0
+    },
+    "dataset_fingerprint": "f6ea49db984f10230dd966aa1b5ff5ffa6b20f1b4a0ccdcc93c5c07bc7fc51c5",
+    "warnings": [
+      "19 duplicate text hash(es) found (possible copy-paste submissions).",
+      "2 row(s) have missing comment text and will be skipped in analysis."
+    ],
+    "errors": []
+  },
+  "embedding_runs": [
+    {
+      "run_id": "173539fe-6464-4341-922b-c05e78237793",
+      "provider": "openai",
+      "model_name": "text-embedding-3-small",
+      "batch_size": 64,
+      "row_count": 1081,
+      "embedding_dim": 1536,
+      "created_at": "2026-03-02T20:51:14.429878",
+      "params": {
+        "provider": "openai",
+        "model": "text-embedding-3-small",
+        "batch_size": 64
+      }
+    }
+  ],
+  "projection_runs": [
+    {
+      "run_id": "f6f920c1-8af5-4c2e-b100-8127f742e7a1",
+      "embedding_run_id": "173539fe-6464-4341-922b-c05e78237793",
+      "method": "umap",
+      "dims": 2,
+      "params": {
+        "random_state": 42,
+        "n_neighbors": 15,
+        "min_dist": 0.1
+      },
+      "row_count": 1081,
+      "created_at": "2026-03-02T20:54:06.633050"
+    }
+  ],
+  "cluster_runs": [],
+  "plugin_runs": [],
+  "app_version": "0.2.0"
+}

@@ -58,7 +58,7 @@ from shared_models import ManualAnnotation, ManualLabel
 
 init_defaults()
 
-st.title("🔍 Review")
+st.title("🔍 Review Comments")
 
 if not require_project():
     st.stop()
@@ -288,30 +288,19 @@ with id_input_col:
         elif typed_id.strip():
             st.error(f"Document ID `{typed_id}` not found.")
 
-# ── Main review area ──────────────────────────────────────────────────────────
+# ── Load current comment data ─────────────────────────────────────────────────
 
-# Get comment data
-comment_row = df_all[df_all["comment_id"] == comment_id]
-if comment_row.empty:
-    st.error(f"Comment {comment_id!r} not found in normalized data.")
-    st.stop()
-
-comment_row = comment_row.iloc[0]
-comment_text = str(comment_row.get("comment_text", ""))
-
-# Current annotation
+comment_row = df_all[df_all["comment_id"] == comment_id].iloc[0]
 existing_ann = get_annotation(project_id, comment_id)
 current_label = existing_ann.label.value if existing_ann else None
 
-# Render comment card
-comment_card(
-    comment_id=comment_id,
-    comment_text=comment_text,
-    current_label=current_label,
-    index_display=f"#{current_idx + 1} of {len(queue)}",
-)
+# ── Metadata panel (right after Document ID) ──────────────────────────────────
 
-st.divider()
+metadata_panel(comment_row, expanded=True)
+
+# ── Comment card (large scrollable text) ──────────────────────────────────────
+
+comment_card(comment_id, comment_row.get("comment_text", ""), current_label)
 
 # ── Label buttons ─────────────────────────────────────────────────────────────
 
@@ -361,9 +350,7 @@ if new_note != note_val:
 
 st.divider()
 
-# ── Metadata + derived features panels ───────────────────────────────────────
-
-metadata_panel(comment_row, expanded=False)
+# ── Derived features + predictions panels ─────────────────────────────────────
 
 enrichments = load_enrichments_for_comment(project_id, comment_id)
 derived_features_panel(enrichments, expanded=bool(enrichments))

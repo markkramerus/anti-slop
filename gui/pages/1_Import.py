@@ -39,6 +39,23 @@ init_defaults()
 st.title("📥 Import")
 st.markdown("Upload a public comment CSV to create a new analysis project.")
 
+# ── Sidebar — project status banner ──────────────────────────────────────────
+
+with st.sidebar:
+    if has_project():
+        manifest = st.session_state.get(CURRENT_PROJECT_MANIFEST)
+        if manifest:
+            st.success(f"📁 **{manifest.project_name}**")
+            st.caption(f"ID: `{manifest.project_id[:8]}…`")
+            if manifest.ingest_summary:
+                s = manifest.ingest_summary
+                st.caption(
+                    f"{s.total_rows:,} comments · "
+                    f"{s.rows_missing_comment} missing"
+                )
+    else:
+        st.info("No project loaded.")
+
 # ── Existing projects ─────────────────────────────────────────────────────────
 
 with st.expander("📂 Open existing project", expanded=not has_project()):
@@ -51,7 +68,7 @@ with st.expander("📂 Open existing project", expanded=not has_project()):
         if st.button("Open selected project", key="btn_open_project"):
             manifest = options[choice]
             set_project(manifest)
-            st.success(f"Opened project: **{manifest.project_name}**")
+            st.toast(f"✅ Opened: **{manifest.project_name}**", icon="📁")
             st.rerun()
 
         st.divider()

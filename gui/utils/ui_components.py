@@ -304,20 +304,42 @@ def comment_card(
     current_label: str | None = None,
     index_display: str = "",
 ) -> None:
-    """Render the main comment reading card."""
+    """Render the main comment reading card with a large, scrollable text area."""
+    border_color = (
+        "#28a745" if current_label == "human"
+        else "#dc3545" if current_label == "ai_generated"
+        else "#ffc107" if current_label == "uncertain"
+        else "#6c757d"
+    )
+    # Escape HTML special characters in comment text
+    import html as _html
+    safe_text = _html.escape(str(comment_text))
     st.markdown(
         f"""
         <div style="
             background: #f8f9fa;
-            border-left: 4px solid {'#28a745' if current_label == 'human' else '#dc3545' if current_label == 'ai_generated' else '#ffc107' if current_label == 'uncertain' else '#6c757d'};
-            padding: 1rem 1.5rem;
+            border-left: 4px solid {border_color};
             border-radius: 0 8px 8px 0;
             margin-bottom: 1rem;
+            overflow: hidden;
         ">
-            <div style="font-size: 0.75rem; color: #6c757d; margin-bottom: 0.5rem;">
-                {index_display} · <code>{comment_id}</code> · {label_badge(current_label)}
+            <div style="
+                font-size: 0.75rem;
+                color: #6c757d;
+                padding: 0.6rem 1.5rem 0.4rem 1.5rem;
+                border-bottom: 1px solid #e9ecef;
+            ">
+                {index_display + " · " if index_display else ""}<code>{comment_id}</code> · {label_badge(current_label)}
             </div>
-            <div style="font-size: 1rem; line-height: 1.6; white-space: pre-wrap;">{comment_text}</div>
+            <div style="
+                font-size: 1rem;
+                line-height: 1.6;
+                white-space: pre-wrap;
+                overflow-y: auto;
+                min-height: 200px;
+                max-height: 480px;
+                padding: 1rem 1.5rem;
+            ">{safe_text}</div>
         </div>
         """,
         unsafe_allow_html=True,
